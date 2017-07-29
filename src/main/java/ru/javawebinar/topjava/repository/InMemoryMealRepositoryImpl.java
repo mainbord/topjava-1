@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.controller;
+package ru.javawebinar.topjava.repository;
 
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealWithExceed;
@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * Created by mainbord on 28.07.17.
  */
-public class MealControllerImpl implements MealController {
+public class InMemoryMealRepositoryImpl implements MealRepository {
 
     public List<MealWithExceed> getMeals(){
         return MealsUtil.getFilteredWithExceeded(MealsUtil.meals, LocalTime.MIN, LocalTime.MAX, 2000);

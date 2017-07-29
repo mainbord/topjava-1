@@ -7,23 +7,12 @@
 
 <body>
 <h3><a href="index.html">Home</a></h3>
-<h2>Update or Create Meal</h2>
+<h2>${param.action == 'create' ? 'Create meal' : 'Edit meal'}</h2>
 
-
+<jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
 <form action="" method="POST">
-
-
-    <c:choose>
-        <c:when test="${meal.id == null}">
-            <input type="text" name="id" hidden value=${meal.id}>
-            <br/>
-        </c:when>
-        <c:otherwise>
-            ID: <input type="text" name="id" readonly value=${meal.id}>
-            <br/>
-        </c:otherwise>
-    </c:choose>
-
+    <input type="text" name="id" hidden value=${meal.id}>
+    <br/>
     Date: <input type="datetime-local" name="datetime" value=${meal.dateTime}>
     <br/>
     Description: <input type="text" name="description" value=${meal.description}>

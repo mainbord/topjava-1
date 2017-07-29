@@ -1,8 +1,8 @@
 package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
-import ru.javawebinar.topjava.controller.MealController;
-import ru.javawebinar.topjava.controller.MealControllerImpl;
+import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.repository.InMemoryMealRepositoryImpl;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.MealsUtil;
 
@@ -22,12 +22,12 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
 
-    private MealController MC;
+    private MealRepository MC;
 
     @Override
     public void init() throws ServletException {
         super.init();
-        MC = new MealControllerImpl();
+        MC = new InMemoryMealRepositoryImpl();
     }
 
     @Override
@@ -41,45 +41,42 @@ public class MealServlet extends HttpServlet {
             int id = Integer.parseInt(request.getParameter("id"));
             request.setAttribute("meal", MC.getMeal(id));
             request.getRequestDispatcher("/meal.jsp").forward(request, response);
+            log.info("one meal edited");
         } else if (action.equals("delete")) {
             int id = Integer.parseInt(request.getParameter("id"));
             MC.deleteMeal(id);
-            int ss = MC.getMeals().size();
             request.setAttribute("meals", MC.getMeals());
             response.sendRedirect("meals");
+            log.info("one meal deleted");
         } else if (action.equals("create")) {
             request.setAttribute("meal", new Meal(null, LocalDateTime.now(), "Введите описание", 1000));
             request.getRequestDispatcher("/meal.jsp").forward(request, response);
         }
-
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String action = req.getParameter("act");
-        if (action != null && action.equals("create")) {
-            req.setAttribute("meal", new Meal(null, LocalDateTime.now(), "Введите описание", 1000));
-            req.getRequestDispatcher("/meal.jsp").forward(req, resp);
+        String idd = req.getParameter("id");
+        if (idd.equals("")) {
+            String datetime = req.getParameter("datetime");
+            String description = req.getParameter("description");
+            Integer calories = Integer.parseInt(req.getParameter("calories"));
+            Meal meal = new Meal(null, LocalDateTime.parse(datetime), description, calories);
+            MC.updateMeal(meal);
+            req.setAttribute("meals", MC.getMeals());
+            req.getRequestDispatcher("/meals.jsp").forward(req, resp);
+            log.info("edit ok");
         } else {
-            String idd = req.getParameter("id");
-            if (idd.equals("")) {
-                String datetime = req.getParameter("datetime");
-                String description = req.getParameter("description");
-                Integer calories = Integer.parseInt(req.getParameter("calories"));
-                Meal meal = new Meal(null, LocalDateTime.parse(datetime), description, calories);
-                MC.updateMeal(meal);
-                req.setAttribute("meals", MC.getMeals());
-                req.getRequestDispatcher("/meals.jsp").forward(req, resp);
-            } else {
-                int id = Integer.parseInt(idd);
-                String datetime = req.getParameter("datetime");
-                String description = req.getParameter("description");
-                Integer calories = Integer.parseInt(req.getParameter("calories"));
-                Meal meal = new Meal(id, LocalDateTime.parse(datetime), description, calories);
-                MC.updateMeal(meal);
-                req.setAttribute("meals", MealsUtil.getFilteredWithExceeded(MealsUtil.meals, LocalTime.MIN, LocalTime.MAX, 2000));
-                req.getRequestDispatcher("/meals.jsp").forward(req, resp);
-            }
+            int id = Integer.parseInt(idd);
+            String datetime = req.getParameter("datetime");
+            String description = req.getParameter("description");
+            Integer calories = Integer.parseInt(req.getParameter("calories"));
+            Meal meal = new Meal(id, LocalDateTime.parse(datetime), description, calories);
+            MC.updateMeal(meal);
+            req.setAttribute("meals", MealsUtil.getFilteredWithExceeded(MealsUtil.meals, LocalTime.MIN, LocalTime.MAX, 2000));
+            req.getRequestDispatcher("/meals.jsp").forward(req, resp);
+            log.info("Creation succesfull");
         }
+
     }
 }

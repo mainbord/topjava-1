@@ -6,7 +6,7 @@ import java.time.LocalTime;
 
 public class Meal {
 
-    private final Integer id;
+    private Integer id;
 
     private final LocalDateTime dateTime;
 
@@ -49,4 +49,17 @@ public class Meal {
         return dateTime.toString().replaceAll("T"," ");
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Meal{" +
+                "id=" + id +
+                ", dateTime=" + dateTime +
+                ", description='" + description + '\'' +
+                ", calories=" + calories +
+                '}';
+    }
 }

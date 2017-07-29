@@ -19,10 +19,7 @@
 
 <c:if test="${!empty meals}">
 
-    <form name="form" method="post">
-        <input type="submit" value="create" name="act"/>
-    </form>
-
+    <a href="meals?action=create&id=${meal.id}">Create</a>
     <table class="tg" border="1">
         <tr>
             <th width="80" hidden>id</th>
@@ -33,13 +30,14 @@
             <th width="60">Delete</th>
         </tr>
         <c:forEach items="${meals}" var="meal">
-        <tr class="${meal.exceed ? 'exceeded' : 'normal'}">
-            <td hidden>${meal.id}</td>
-            <td>${meal.getDateTimeWithoutT()}</td>
-            <td>${meal.description}</td>
-            <td>${meal.calories}</td>
-            <td><a href="meals?action=update&id=${meal.id}">Edit</a></td>
-            <td><a href="meals?action=delete&id=${meal.id}">Delete</a></td>
+            <jsp:useBean id="meal" scope="page" type="ru.javawebinar.topjava.model.MealWithExceed"/>
+            <tr class="${meal.exceed ? 'exceeded' : 'normal'}">
+                <td hidden>${meal.id}</td>
+                <td>${meal.getDateTimeWithoutT()}</td>
+                <td>${meal.description}</td>
+                <td>${meal.calories}</td>
+                <td><a href="meals?action=update&id=${meal.id}">Edit</a></td>
+                <td><a href="meals?action=delete&id=${meal.id}">Delete</a></td>
             </tr>
         </c:forEach>
     </table>
