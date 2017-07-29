@@ -4,7 +4,15 @@
 <head>
     <title>Meals</title>
 </head>
+<style>
+    .normal {
+        color: green;
+    }
 
+    .exceeded {
+        color: red;
+    }
+</style>
 <body>
 <h3><a href="index.html">Home</a></h3>
 <h2>Meals</h2>
@@ -15,8 +23,7 @@
         <input type="submit" value="create" name="act"/>
     </form>
 
-    <table class="tg">
-
+    <table class="tg" border="1">
         <tr>
             <th width="80" hidden>id</th>
             <th width="80">dateTime</th>
@@ -26,15 +33,7 @@
             <th width="60">Delete</th>
         </tr>
         <c:forEach items="${meals}" var="meal">
-
-            <c:choose>
-                <c:when test="${meal.exceed}">
-                    <tr bgcolor="red">
-                </c:when>
-                <c:otherwise>
-                    <tr bgcolor="green">
-                </c:otherwise>
-            </c:choose>
+        <tr class="${meal.exceed ? 'exceeded' : 'normal'}">
             <td hidden>${meal.id}</td>
             <td>${meal.getDateTimeWithoutT()}</td>
             <td>${meal.description}</td>
