@@ -10,14 +10,18 @@
 <h2>Meals</h2>
 
 <c:if test="${!empty meals}">
+
+    <form name="form" method="post">
+        <input type="submit" value="create" name="act"/>
+    </form>
+
     <table class="tg">
 
-
         <tr>
+            <th width="80" hidden>id</th>
             <th width="80">dateTime</th>
             <th width="120">description</th>
             <th width="120">calories</th>
-            <th width="120">exceed</th>
             <th width="60">Edit</th>
             <th width="60">Delete</th>
         </tr>
@@ -31,12 +35,12 @@
                     <tr bgcolor="green">
                 </c:otherwise>
             </c:choose>
-            <td>${meal.dateTime}</td>
+            <td hidden>${meal.id}</td>
+            <td>${meal.getDateTimeWithoutT()}</td>
             <td>${meal.description}</td>
             <td>${meal.calories}</td>
-            <td>${meal.exceed}</td>
-            <%--                <td><a href="<c:url value='/edit/${meal.id}'/>">Edit </a></td>
-                            <td><a href="<c:url value='/remove/${meal.id}'/>">Delete ${person.id}</a></td>--%>
+            <td><a href="meals?action=update&id=${meal.id}">Edit</a></td>
+            <td><a href="meals?action=delete&id=${meal.id}">Delete</a></td>
             </tr>
         </c:forEach>
     </table>
